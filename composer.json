@@ -1,0 +1,13 @@
+{
+    "name": "purdue/purdue-landingpages",
+    "description": "Convert a site to support landing pages ONLY!",
+    "authors": [
+        {
+            "name": "Purdue Marketing and Communications",
+            "email": "digital-marketing@groups.purdue.edu",
+            "homepage": "https://marcom.purdue.edu/"
+        }
+    ],
+    "type": "wordpress-muplugin",
+    "minimum-stability": "stable"
+}
