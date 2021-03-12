@@ -5,7 +5,7 @@ Plugin Name: Purdue Landing Page Post Types
 Description: Establishes a Landing Page ONLY WordPress site!
 Author: Purdue Marketing and Communications
 Author URI: https://marcom.purdue.edu/
-Version: 1.0.0
+Version: 1.1.0
  
 License:     GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -40,19 +40,21 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
         private $_settings = array();
 
         public function __construct() {
-            // self::includes();
+            $this->includes();
             $this->hooks();
         }
 
-        private static function includes() {
-            
+        private function includes() {
+            // require_once dirname( __FILE__ ) . '/inc/class-header-options.php';
         }
 
         private function hooks() {
             add_action( 'init', array($this, 'lp_post_type'), 0 );
+            add_action( 'init', array($this, 'force_permalink' ) );
             add_action( 'admin_menu', array($this, 'remove_default_post_type' ));
             add_action( 'admin_bar_menu', array($this, 'remove_default_post_type_menu_bar'), 999 );
             add_action( 'wp_dashboard_setup', array( $this, 'remove_draft_widget'), 999 );
+
         }
 
         public function lp_post_type() {
@@ -60,7 +62,7 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
                 $labels = array(
                     'name'                  => _x( 'Pages', 'Post Type General Name', 'purdue' ),
                     'singular_name'         => _x( 'Page', 'Post Type Singular Name', 'purdue' ),
-                    'menu_name'             => __( 'Page', 'purdue' ),
+                    'menu_name'             => __( 'Pages', 'purdue' ),
                     'name_admin_bar'        => __( 'Page', 'purdue' ),
                     'archives'              => __( 'Item Archives', 'purdue' ),
                     'attributes'            => __( 'Item Attributes', 'purdue' ),
@@ -87,16 +89,16 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
                     'filter_items_list'     => __( 'Filter items list', 'purdue' ),
                 );
                 $rewrite = array(
-                    'slug'                  => '/',
+                    'slug'                  => '',
                     'with_front'            => false,
-                    'pages'                 => false,
+                    'pages'                 => true,
                     'feeds'                 => false,
                 );
                 $args = array(
                     'label'                 => __( 'Page', 'purdue' ),
                     'description'           => __( 'Custom page type that allows for editing everything except the basic footer', 'purdue' ),
                     'labels'                => $labels,
-                    'supports'              => array( 'title', 'editor', 'revisions', 'custom-fields', 'page-attributes', 'post-formats' ),
+                    'supports'              => array( 'title', 'editor', 'thumbnail', 'revisions', 'custom-fields', 'page-attributes', 'post-formats' ),
                     'hierarchical'          => true,
                     'public'                => true,
                     'show_ui'               => true,
@@ -114,9 +116,21 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
                     'show_in_rest'          => true,
                 );
                 register_post_type( 'lndngpg', $args );
+
+                //Needs fixed - See bookmarked solution
+                if( get_option('lndngpg_permalinks_flushed') !== 1 ) {
+ 
+                    flush_rewrite_rules(false);
+                    update_option('lndngpg_permalinks_flushed', 1);
+             
+                }
             
         }
 
+        public function force_permalink() {
+            global $wp_rewrite;
+            $wp_rewrite->set_permalink_structure( '%postname%/' );
+        }
         
         // ************* Remove default Posts type since no blog *************
         public function remove_default_post_type() {
@@ -142,6 +156,7 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
     function PurdueLandingPages_activation() {
         // Clear the permalinks after the post type has been registered.
         flush_rewrite_rules(); 
+        update_option('lndngpg_permalinks_flushed', 1);
     }
 
     function PurdueLandingPages_deactivation() {
@@ -149,6 +164,7 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
 
         // Clear the permalinks after the post type has been registered.
         flush_rewrite_rules(); 
+        update_option('lndngpg_permalinks_flushed', 0);
     }
 
     register_activation_hook(   __FILE__, 'PurdueLandingPages_activation' );

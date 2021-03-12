@@ -8,6 +8,9 @@ Establishes a WordPress site dedicated to campaign specific landing pages.  Enab
 This plugin was created to work with a customized template within the Purdue Branded Theme.  The template contains a minimal branded footer to meet legal requirements and provide the most flexibility possible to the landing page creators.  In order to leverage this plugin with other themes, you will need to create a template file named single-lndngpg.php
 
 ## Change Log
+#### [1.1.0] - 2021-03-12
+- ADD: Thumbnail featured image to LP post type
+
 #### [1.0.0] - 2020-12-15
 - Initial Release
 - ADD: LNDNGPG custom post type
