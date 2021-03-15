@@ -5,7 +5,7 @@ Plugin Name: Purdue Landing Page Post Types
 Description: Establishes a Landing Page ONLY WordPress site!
 Author: Purdue Marketing and Communications
 Author URI: https://marcom.purdue.edu/
-Version: 1.1.0
+Version: 1.1.1
  
 License:     GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -89,7 +89,7 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
                     'filter_items_list'     => __( 'Filter items list', 'purdue' ),
                 );
                 $rewrite = array(
-                    'slug'                  => '',
+                    'slug'                  => '/',
                     'with_front'            => false,
                     'pages'                 => true,
                     'feeds'                 => false,
@@ -118,10 +118,10 @@ if ( ! class_exists( 'PurdueLandingPages' ) ) :
                 register_post_type( 'lndngpg', $args );
 
                 //Needs fixed - See bookmarked solution
-                if( get_option('lndngpg_permalinks_flushed') !== 1 ) {
+                if( get_option('lndngpg_permalinks_flushed') !== 2 ) {
  
                     flush_rewrite_rules(false);
-                    update_option('lndngpg_permalinks_flushed', 1);
+                    update_option('lndngpg_permalinks_flushed', 2);
              
                 }
             
